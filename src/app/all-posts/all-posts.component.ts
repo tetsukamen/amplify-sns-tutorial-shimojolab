@@ -30,9 +30,8 @@ export class AllPostsComponent implements OnInit {
   }
 
   public onCreate(post:Post):void{
-    post.type = "post";
-    post.timestamp = Math.floor(new Date().getTime()/1000);
-    this.api.CreatePost(post).then(event=>{
+    this.api.CreatePostAndTimeline(post.content).then(event=>{
+      this.createForm.reset();
       console.log('post created!');
     }).catch(e=>{
       console.log('error createing post...');

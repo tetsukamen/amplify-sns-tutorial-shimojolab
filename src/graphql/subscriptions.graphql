@@ -17,3 +17,31 @@ subscription OnDeletePost {
     timestamp
   }
 }
+subscription OnCreateTimeline($userId: String!) {
+  onCreateTimeline(userId: $userId) {
+    userId
+    timestamp
+    postId
+    post {
+      type
+      id
+      content
+      owner
+      timestamp
+    }
+  }
+}
+subscription OnCreateFollowRelationship {
+  onCreateFollowRelationship {
+    followeeId
+    followerId
+    timestamp
+  }
+}
+subscription OnDeleteFollowRelationship {
+  onDeleteFollowRelationship {
+    followeeId
+    followerId
+    timestamp
+  }
+}

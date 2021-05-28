@@ -1,8 +1,3 @@
-<div>
-    <div>{{username}}</div>
-    <button (click)="toggleFollow()">{{isFollowing ? 'フォロー解除' : 'フォローする'}}</button>
-</div>
-
 <ul>
     <li *ngFor="let post of posts">
         <div [routerLink]="['/profile',post.owner]">{{post.owner}}</div>

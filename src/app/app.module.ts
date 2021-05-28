@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { AllPostsComponent } from './all-posts/all-posts.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileComponent } from './profile/profile.component';
+import { TimelineComponent } from './timeline/timeline.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AllPostsComponent,
-    ProfileComponent
+    ProfileComponent,
+    TimelineComponent
   ],
   imports: [
     BrowserModule,
