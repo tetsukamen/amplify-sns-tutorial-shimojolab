@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AllPostsComponent } from './all-posts/all-posts.component';
 import { ProfileComponent } from './profile/profile.component';
+import { SearchComponent } from './search/search.component';
 import { TimelineComponent } from './timeline/timeline.component';
 
 const routes: Routes = [
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path:'profile/:username',
     component:ProfileComponent,
+  },
+  {
+    path:'search',
+    component:SearchComponent,
   }
 ];
 

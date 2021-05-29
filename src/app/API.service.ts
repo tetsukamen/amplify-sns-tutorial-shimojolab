@@ -198,6 +198,86 @@ export type ModelTimelineConnection = {
   nextToken?: string | null;
 };
 
+export type SearchablePostFilterInput = {
+  type?: SearchableStringFilterInput | null;
+  id?: SearchableIDFilterInput | null;
+  content?: SearchableStringFilterInput | null;
+  owner?: SearchableStringFilterInput | null;
+  timestamp?: SearchableIntFilterInput | null;
+  and?: Array<SearchablePostFilterInput | null> | null;
+  or?: Array<SearchablePostFilterInput | null> | null;
+  not?: SearchablePostFilterInput | null;
+};
+
+export type SearchableStringFilterInput = {
+  ne?: string | null;
+  gt?: string | null;
+  lt?: string | null;
+  gte?: string | null;
+  lte?: string | null;
+  eq?: string | null;
+  match?: string | null;
+  matchPhrase?: string | null;
+  matchPhrasePrefix?: string | null;
+  multiMatch?: string | null;
+  exists?: boolean | null;
+  wildcard?: string | null;
+  regexp?: string | null;
+  range?: Array<string | null> | null;
+};
+
+export type SearchableIDFilterInput = {
+  ne?: string | null;
+  gt?: string | null;
+  lt?: string | null;
+  gte?: string | null;
+  lte?: string | null;
+  eq?: string | null;
+  match?: string | null;
+  matchPhrase?: string | null;
+  matchPhrasePrefix?: string | null;
+  multiMatch?: string | null;
+  exists?: boolean | null;
+  wildcard?: string | null;
+  regexp?: string | null;
+  range?: Array<string | null> | null;
+};
+
+export type SearchableIntFilterInput = {
+  ne?: number | null;
+  gt?: number | null;
+  lt?: number | null;
+  gte?: number | null;
+  lte?: number | null;
+  eq?: number | null;
+  range?: Array<number | null> | null;
+};
+
+export type SearchablePostSortInput = {
+  field?: SearchablePostSortableFields | null;
+  direction?: SearchableSortDirection | null;
+};
+
+export enum SearchablePostSortableFields {
+  type = "type",
+  id = "id",
+  content = "content",
+  owner = "owner",
+  timestamp = "timestamp"
+}
+
+export enum SearchableSortDirection {
+  asc = "asc",
+  desc = "desc"
+}
+
+export type SearchablePostConnection = {
+  __typename: "SearchablePostConnection";
+  items?: Array<Post | null> | null;
+  nextToken?: string | null;
+  total?: number | null;
+};
+
 export type ModelIDKeyConditionInput = {
   eq?: string | null;
   le?: string | null;
@@ -359,6 +439,20 @@ export type ListPostsBySpecificOwnerQuery = {
     timestamp: number;
   } | null> | null;
   nextToken?: string | null;
+};
+
+export type SearchPostsQuery = {
+  __typename: "SearchablePostConnection";
+  items?: Array<{
+    __typename: "Post";
+    type: string;
+    id?: string | null;
+    content: string;
+    owner?: string | null;
+    timestamp: number;
+  } | null> | null;
+  nextToken?: string | null;
+  total?: number | null;
 };
 
 export type GetFollowRelationshipQuery = {
@@ -811,6 +905,49 @@ export class APIService {
     return <ListPostsBySpecificOwnerQuery>(
       response.data.listPostsBySpecificOwner
     );
+  }
+  async SearchPosts(
+    filter?: SearchablePostFilterInput,
+    sort?: SearchablePostSortInput,
+    limit?: number,
+    nextToken?: string,
+    from?: number
+  ): Promise<SearchPostsQuery> {
+    const statement = `query SearchPosts($filter: SearchablePostFilterInput, $sort: SearchablePostSortInput, $limit: Int, $nextToken: String, $from: Int) {
+        searchPosts(filter: $filter, sort: $sort, limit: $limit, nextToken: $nextToken, from: $from) {
+          __typename
+          items {
+            __typename
+            type
+            id
+            content
+            owner
+            timestamp
+          }
+          nextToken
+          total
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {};
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (sort) {
+      gqlAPIServiceArguments.sort = sort;
+    }
+    if (limit) {
+      gqlAPIServiceArguments.limit = limit;
+    }
+    if (nextToken) {
+      gqlAPIServiceArguments.nextToken = nextToken;
+    }
+    if (from) {
+      gqlAPIServiceArguments.from = from;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <SearchPostsQuery>response.data.searchPosts;
   }
   async GetFollowRelationship(
     followeeId: string,

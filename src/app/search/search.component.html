@@ -1,0 +1,14 @@
+<form (ngSubmit)="search(searchForm.value)">
+    <div>
+        <input [formControl]="searchForm">
+    </div>
+    <button type="submit">検索</button>
+</form>
+
+<ul>
+    <li *ngFor="let post of posts">
+        <div [routerLink]="['/profile',post.owner]">{{post.owner}}</div>
+        <div>{{post.timestamp*1000 | date:"yyyy/MM/dd HH:mm"}}</div>
+        <div>{{post.content}}</div>
+    </li>
+</ul>
